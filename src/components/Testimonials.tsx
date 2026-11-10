@@ -164,7 +164,7 @@ export function Testimonials() {
             onClick={() => setOpen((value) => !value)}
           >
             <span>
-              {open ? "Hide" : "Read"} all {all.length} client testimonials
+              {open ? "Hide" : "Read"} all client testimonials
             </span>
             <Plus />
           </button>
