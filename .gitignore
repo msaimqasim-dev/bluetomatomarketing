@@ -1,0 +1,5 @@
+node_modules
+dist
+# working folders created by scripts/ (sources are re-downloadable, QA output is disposable)
+research
+qa-output

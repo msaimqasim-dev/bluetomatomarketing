@@ -1,0 +1,485 @@
+/* ==========================================================================
+   BASE — document, typography, layout primitives, buttons, reveal system
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+html.is-locked {
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--ink-soft);
+  background: var(--white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+#site {
+  position: relative;
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--blue-500);
+  color: var(--white);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+main:focus {
+  outline: none;
+}
+
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---- Section themes ------------------------------------------------------ */
+.theme-white,
+.theme-off,
+.theme-tint,
+.theme-navy,
+.theme-blue {
+  background: var(--bg);
+  color: var(--ink-soft);
+}
+
+.theme-off {
+  --bg: var(--off-white);
+}
+
+.theme-tint {
+  --bg: var(--blue-50);
+}
+
+.theme-navy {
+  --bg: var(--navy-900);
+  --ink: var(--white);
+  --ink-soft: rgb(255 255 255 / 0.76);
+  --ink-mute: rgb(255 255 255 / 0.62);
+  --line: rgb(255 255 255 / 0.16);
+  --accent: var(--blue-300);
+  --focus: var(--white);
+}
+
+/* Pure brand blue. White on #0081c3 is 4.26:1, so this theme is only used
+   with large type (>= 24px, or >= 19px bold). */
+.theme-blue {
+  --bg: var(--blue-500);
+  --ink: var(--white);
+  --ink-soft: var(--white);
+  --ink-mute: var(--white);
+  --line: rgb(255 255 255 / 0.42);
+  --accent: var(--white);
+  --focus: var(--white);
+}
+
+/* ---- Layout -------------------------------------------------------------- */
+.wrap {
+  width: min(100% - (2 * var(--gutter)), var(--wrap-max));
+  margin-inline: auto;
+}
+
+.section {
+  padding-block: var(--section-y);
+}
+
+/* ---- Typography ---------------------------------------------------------- */
+h1,
+h2,
+h3,
+h4 {
+  color: var(--ink);
+  font-weight: 600;
+  font-stretch: var(--wdth-display);
+  letter-spacing: -0.03em;
+  word-spacing: 0.04em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+.t-display {
+  font-size: var(--fs-display);
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+}
+
+.t-h2 {
+  font-size: var(--fs-h2);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.t-h3 {
+  font-size: var(--fs-h3);
+  line-height: 1.05;
+}
+
+.t-h4 {
+  font-size: var(--fs-h4);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.t-lead {
+  font-size: var(--fs-lead);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.t-small {
+  font-size: var(--fs-small);
+  line-height: 1.5;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  font-stretch: 100%;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.eyebrow::before {
+  content: "";
+  flex: none;
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+  transform: translateY(-0.3em);
+}
+
+.flow > * + * {
+  margin-top: var(--flow, 1.1em);
+}
+
+/* ---- Icons --------------------------------------------------------------- */
+.icon {
+  flex: none;
+  width: 1.125em;
+  height: 1.125em;
+}
+
+/* ---- Buttons ------------------------------------------------------------- */
+.btn {
+  --btn-bg: var(--blue-600);
+  --btn-fg: var(--white);
+  --btn-border: var(--blue-600);
+  --btn-bg-hover: var(--navy-900);
+  --btn-fg-hover: var(--white);
+  --btn-border-hover: var(--navy-900);
+
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 3.5rem;
+  padding: 0 1.75rem;
+  overflow: hidden;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  color: var(--btn-fg);
+  background: var(--btn-bg);
+  border: 1px solid var(--btn-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    color var(--t-fast) ease,
+    border-color var(--t-fast) ease;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  background: var(--btn-bg-hover);
+  transform: translate3d(0, 102%, 0);
+  transition: transform 380ms var(--ease-out);
+}
+
+.btn .icon {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.btn:hover,
+.btn:focus-visible {
+  color: var(--btn-fg-hover);
+  border-color: var(--btn-border-hover);
+}
+
+.btn:hover::before,
+.btn:focus-visible::before {
+  transform: none;
+}
+
+.btn:hover .icon {
+  transform: translateX(0.25rem);
+}
+
+.btn--ghost {
+  --btn-bg: transparent;
+  --btn-fg: var(--navy-900);
+  --btn-border: rgb(7 26 43 / 0.28);
+}
+
+.btn--light {
+  --btn-bg: var(--white);
+  --btn-fg: var(--navy-900);
+  --btn-border: var(--white);
+  --btn-bg-hover: var(--blue-600);
+  --btn-border-hover: var(--blue-600);
+}
+
+.btn--sm {
+  min-height: 2.75rem;
+  padding: 0 1.25rem;
+  font-size: 0.875rem;
+}
+
+.btn--lg {
+  min-height: 4.25rem;
+  padding: 0 2.25rem;
+  font-size: 1.0625rem;
+}
+
+.btn--block {
+  width: 100%;
+}
+
+/* ---- Text link with arrow ------------------------------------------------ */
+.link-arrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-height: 2.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+  transition: color var(--t-fast) ease;
+}
+
+.link-arrow__text {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.35em;
+}
+
+.link-arrow .icon {
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.link-arrow:hover {
+  color: var(--accent);
+}
+
+.link-arrow:hover .icon {
+  transform: translateX(0.3rem);
+}
+
+/* ---- Media frame --------------------------------------------------------- */
+.media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--blue-50);
+}
+
+.media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ---- Scroll reveal (IntersectionObserver adds [data-in]) -----------------
+   Hidden states only apply once JS has confirmed support (.reveal-ready), so
+   content is never lost without it. */
+[data-reveal] {
+  transition:
+    opacity var(--t-reveal) var(--ease-out),
+    transform var(--t-reveal) var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+
+.reveal-ready [data-reveal]:not([data-in]) {
+  opacity: 0;
+  transform: translate3d(0, 1.75rem, 0);
+}
+
+/* Image wipe. The clip is applied to the frame's CHILD, never to the observed
+   frame itself: an element fully hidden by its own clip-path reports as
+   non-intersecting in Chromium, so it would never be revealed. */
+[data-reveal="media"] {
+  transition: none;
+}
+
+.reveal-ready [data-reveal="media"]:not([data-in]) {
+  opacity: 1;
+  transform: none;
+}
+
+[data-reveal="media"] > picture {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+[data-reveal="media"] > * {
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 1100ms var(--ease-out);
+}
+
+[data-reveal="media"] img {
+  transition:
+    clip-path 1100ms var(--ease-out),
+    scale 1500ms var(--ease-out),
+    transform 900ms var(--ease-out);
+}
+
+.reveal-ready [data-reveal="media"]:not([data-in]) > * {
+  clip-path: inset(0 0 100% 0);
+}
+
+.reveal-ready [data-reveal="media"]:not([data-in]) img {
+  scale: 1.14;
+}
+
+/* ---- Split headline reveal (see hooks/useMotion.ts) ----------------------
+   Words are masked and rise in sequence when their heading gets [data-in]
+   from the shared IntersectionObserver. */
+[data-split="words"] .word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+[data-split="words"] .word > span {
+  display: inline-block;
+  transform: none;
+  transition:
+    transform 950ms var(--ease-out),
+    opacity 950ms var(--ease-out);
+  transition-delay: calc(var(--wi, 0) * 62ms);
+}
+
+/* The parent's own reveal is replaced by the word animation. */
+.reveal-ready [data-reveal][data-split]:not([data-in]) {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-ready [data-split]:not([data-in]) .word > span {
+  opacity: 0;
+  transform: translate3d(0, 110%, 0);
+}
+
+/* ---- Composed-headline line reveal -------------------------------------- */
+[data-lines] > span {
+  transition:
+    transform 900ms var(--ease-out),
+    opacity 900ms var(--ease-out);
+  transition-delay: calc(var(--li, 0) * 95ms);
+}
+
+.reveal-ready [data-reveal][data-lines]:not([data-in]) {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-ready [data-lines]:not([data-in]) > span {
+  opacity: 0;
+  transform: translate3d(0, 60%, 0);
+}
+
+/* ---- Scroll progress ------------------------------------------------------ */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 70;
+  height: 2px;
+  pointer-events: none;
+}
+
+.scroll-progress__bar {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--blue-500);
+  transform: scaleX(0);
+  transform-origin: left;
+  will-change: transform;
+}
+
+/* ---- Parallax ------------------------------------------------------------- */
+[data-parallax] {
+  --parallax: 0px;
+}
+
+/* ---- Reduced motion ------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal-ready [data-split]:not([data-in]) .word > span,
+  .reveal-ready [data-lines]:not([data-in]) > span {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-parallax] img {
+    transform: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0s !important;
+  }
+}

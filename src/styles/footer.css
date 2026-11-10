@@ -1,0 +1,195 @@
+/* ==========================================================================
+   12 — FOOTER
+   ========================================================================== */
+.site-footer {
+  padding-block: clamp(3rem, 6vw, 5rem) 2rem;
+}
+
+.site-footer > .wrap {
+  padding-top: clamp(3rem, 6vw, 5rem);
+  border-top: 1px solid var(--line);
+}
+
+.site-footer {
+  padding-top: 0;
+}
+
+.site-footer__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.5rem 1.5rem;
+}
+
+.footer-col__title {
+  margin-bottom: 0.625rem;
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  font-stretch: 100%;
+  line-height: 1.4;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.footer-col a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  line-height: 1.25;
+  color: var(--ink-soft);
+  transition: color var(--t-fast) ease;
+}
+
+.footer-col a:hover {
+  color: var(--white);
+}
+
+.footer-col--industries,
+.footer-col--contact {
+  grid-column: 1 / -1;
+}
+
+.footer-col--industries ul {
+  columns: 2;
+  column-gap: 1.5rem;
+}
+
+.footer-col--contact a {
+  overflow-wrap: anywhere;
+}
+
+.site-footer__wordmark {
+  margin-top: clamp(3rem, 7vw, 6rem);
+  color: var(--blue-500);
+}
+
+/* Keep the full-size slot in layout; animate only the artwork inside it. */
+.site-footer__wordmark[data-reveal] {
+  transition: none;
+}
+
+.reveal-ready .site-footer__wordmark[data-reveal]:not([data-in]) {
+  opacity: 1;
+  transform: none;
+}
+
+.site-footer__wordmark .logo {
+  width: 100%;
+  height: auto;
+  opacity: 1;
+  transform: scale(1);
+  transform-origin: 50% 55%;
+  transition:
+    transform 1400ms cubic-bezier(0.22, 0.7, 0.18, 1),
+    opacity 800ms ease;
+}
+
+.reveal-ready .site-footer__wordmark[data-reveal]:not([data-in]) .logo {
+  opacity: 0.12;
+  transform: scale(0.055);
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-footer__wordmark[data-reveal] .logo {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none;
+  }
+}
+
+.site-footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+  padding-top: 1.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  color: var(--ink-mute);
+  border-top: 1px solid var(--line);
+}
+
+.site-footer__legal a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  transition: color var(--t-fast) ease;
+}
+
+.site-footer__legal a:hover {
+  color: var(--white);
+}
+
+.site-footer__legal .icon {
+  transform: rotate(-90deg);
+}
+
+@media (min-width: 48rem) {
+  .site-footer__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gap);
+  }
+
+  .footer-col--explore {
+    grid-column: 1 / span 4;
+  }
+
+  .footer-col--services {
+    grid-column: 5 / span 4;
+  }
+
+  .footer-col--contact {
+    grid-column: 9 / span 4;
+    grid-row: 1;
+  }
+
+  .footer-col--industries {
+    grid-column: 1 / -1;
+  }
+
+  .footer-col--industries ul {
+    columns: 3;
+  }
+
+  .footer-col a {
+    min-height: 2.25rem;
+  }
+}
+
+@media (min-width: 64rem) {
+  .footer-col--explore {
+    grid-column: 1 / span 2;
+  }
+
+  .footer-col--services {
+    grid-column: 3 / span 3;
+  }
+
+  .footer-col--industries {
+    grid-row: 1;
+    grid-column: 6 / span 4;
+  }
+
+  .footer-col--industries ul {
+    columns: 2;
+  }
+
+  .footer-col a {
+    font-size: 0.9375rem;
+  }
+
+  .footer-col--industries a {
+    white-space: nowrap;
+  }
+
+  .footer-col--contact {
+    grid-column: 10 / span 3;
+  }
+}

@@ -1,0 +1,464 @@
+/* Services: one large image, independent copy, and two image-only previews.
+   The measured slots are stationary. ServicesStack moves images between them. */
+.svc {
+  position: relative;
+  padding-bottom: clamp(3rem, 7vw, 6rem);
+}
+
+.svc__heading {
+  padding-bottom: clamp(1.75rem, 4vw, 3rem);
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.svc__track {
+  position: relative;
+  height: calc(var(--steps) * 52svh + 100svh - var(--header-h));
+}
+
+.svc__sticky {
+  position: sticky;
+  top: var(--header-h);
+  height: calc(100svh - var(--header-h));
+  display: flex;
+  align-items: center;
+}
+
+.svc__inner {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vh, 1.5rem);
+  height: 100%;
+  min-height: 0;
+  padding-block: clamp(1rem, 2.7vh, 2rem);
+}
+
+.svc__scene {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.8fr) minmax(0, 1.2fr);
+  column-gap: clamp(1.25rem, 2.5vw, 2.5rem);
+  flex: 1;
+  min-height: 0;
+}
+
+.svc__focus-slot {
+  grid-area: 1 / 2;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+}
+
+.svc__images {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.svc__visual {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  overflow: hidden;
+  visibility: hidden;
+  background: var(--blue-100);
+  border-radius: var(--radius);
+  contain: layout paint;
+  will-change: transform;
+}
+
+.svc__visual img,
+.svc__static-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.svc__thumbnail {
+  position: relative;
+  z-index: 3;
+  grid-row: 1;
+  width: clamp(4.5rem, 7.6vw, 7.5rem);
+  aspect-ratio: 1.12;
+  cursor: pointer;
+  color: var(--blue-600);
+  background: transparent;
+  border-radius: var(--radius);
+}
+
+.svc__thumbnail--previous {
+  grid-column: 1;
+  align-self: start;
+  justify-self: end;
+}
+
+.svc__thumbnail--next {
+  grid-column: 3;
+  align-self: end;
+  justify-self: start;
+}
+
+.svc__thumbnail:disabled {
+  opacity: 0;
+  cursor: default;
+  pointer-events: none;
+}
+
+.svc__thumbnail::before {
+  content: "";
+  position: absolute;
+  inset: -5px;
+  border: 1px solid currentColor;
+  opacity: 0;
+  transition: opacity var(--t-fast) ease;
+}
+
+.svc__thumbnail:hover::before,
+.svc__thumbnail:focus-visible::before {
+  opacity: 1;
+}
+
+.svc__thumbnail-label {
+  position: absolute;
+  top: calc(100% + 0.375rem);
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.svc__descriptions {
+  position: relative;
+  z-index: 2;
+  grid-area: 1 / 3;
+  align-self: center;
+  display: grid;
+  min-width: 0;
+}
+
+.svc__copy {
+  grid-area: 1 / 1;
+  align-self: center;
+  display: grid;
+  justify-items: start;
+  gap: clamp(0.875rem, 2vw, 1.75rem);
+  opacity: 0;
+  visibility: hidden;
+}
+
+.svc__number {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.2em;
+  color: var(--blue-600);
+}
+
+.svc__name {
+  max-width: 16ch;
+  font-size: clamp(1.625rem, 2.65vw, 3rem);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  text-wrap: pretty;
+}
+
+.svc__summary {
+  max-width: 35ch;
+  font-size: clamp(1rem, 1.12vw, 1.3125rem);
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.svc__link {
+  min-height: 2.75rem;
+  font-size: 0.875rem;
+}
+
+.svc__rail {
+  position: relative;
+  z-index: 5;
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.svc__hint {
+  flex: none;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.svc__progress-track {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.svc__progress-bar {
+  position: absolute;
+  inset: 0;
+  background: var(--blue-500);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.svc__controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.svc__controls .icon-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+  color: var(--ink-mute);
+  background: transparent;
+  border-color: var(--line);
+}
+
+.svc__bottom {
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.svc__directory {
+  border-block: 1px solid var(--line);
+}
+
+.svc__directory > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  min-height: 4.75rem;
+  padding-block: 1rem;
+  font-size: var(--fs-h4);
+  font-weight: 600;
+  color: var(--ink);
+  list-style: none;
+  cursor: pointer;
+}
+
+.svc__directory > summary::-webkit-details-marker {
+  display: none;
+}
+
+.svc__directory > summary .icon {
+  color: var(--blue-600);
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.svc__directory[open] > summary .icon {
+  transform: rotate(45deg);
+}
+
+.svc__directory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem clamp(2rem, 5vw, 5rem);
+  padding-block: 0.5rem 2rem;
+}
+
+.svc__directory-item {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.svc__directory-item h3 {
+  margin-bottom: 1rem;
+  font-size: var(--fs-h4);
+}
+
+.svc__directory-item p {
+  margin-bottom: 0.8em;
+  font-size: 1rem;
+}
+
+.svc__directory-item ul {
+  display: grid;
+  gap: 0.375rem;
+  margin-block: 1rem;
+  font-size: 0.875rem;
+  color: var(--blue-600);
+}
+
+.svc__bottom-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 18rem;
+  gap: 3rem;
+  padding-top: clamp(2rem, 4vw, 3rem);
+}
+
+.svc__range-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem 1.5rem;
+  margin-top: 1.25rem;
+  font-size: 0.9375rem;
+}
+
+.svc__links ul {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.75rem;
+}
+
+.svc__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.svc__links a:hover {
+  color: var(--blue-600);
+}
+
+.svc__links .icon {
+  color: var(--blue-600);
+}
+
+/* No pinned section under reduced motion or in a short landscape viewport. */
+.svc__static {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 5rem);
+  padding-top: clamp(2rem, 4vw, 3rem);
+}
+
+.svc__static-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+.svc__static-image {
+  height: clamp(17rem, 40vw, 32rem);
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.svc__copy-content {
+  display: grid;
+  justify-items: start;
+  gap: 1.25rem;
+}
+
+@media (min-width: 48rem) and (max-width: 63.99rem) {
+  .svc__inner {
+    height: min(100%, 43rem);
+  }
+
+  .svc__scene {
+    grid-template-columns: 5rem minmax(0, 1.5fr) minmax(0, 1fr);
+    column-gap: 1.25rem;
+  }
+
+  .svc__name {
+    font-size: 1.75rem;
+  }
+
+  .svc__thumbnail {
+    width: 4.5rem;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .svc__track {
+    height: calc(var(--steps) * 46svh + 100svh - var(--header-h));
+  }
+
+  .svc__scene {
+    grid-template-columns: 3.25rem minmax(0, 1fr) 3.25rem;
+    grid-template-rows: minmax(0, 1fr) auto;
+    column-gap: 0.75rem;
+    row-gap: 1.5rem;
+  }
+
+  .svc__thumbnail {
+    width: 100%;
+  }
+
+  .svc__thumbnail-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.06em;
+  }
+
+  .svc__descriptions {
+    grid-area: 2 / 1 / 3 / -1;
+  }
+
+  .svc__copy {
+    gap: 0.75rem;
+  }
+
+  .svc__name {
+    max-width: 24ch;
+    font-size: clamp(1.5rem, 6.5vw, 2rem);
+    line-height: 1.05;
+  }
+
+  .svc__summary {
+    max-width: 38ch;
+    line-height: 1.45;
+  }
+
+  .svc__number {
+    font-size: 0.75rem;
+  }
+
+  .svc__hint {
+    font-size: 0.6rem;
+  }
+
+  .svc__bottom-row,
+  .svc__directory-grid,
+  .svc__static-item {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .svc__bottom-row {
+    gap: 2rem;
+  }
+
+  .svc__static-image {
+    height: 24rem;
+  }
+}
+
+@media (max-height: 740px) and (min-width: 48rem) {
+  .svc__name {
+    font-size: clamp(1.5rem, 2.3vw, 2.125rem);
+  }
+
+  .svc__copy {
+    gap: 0.875rem;
+  }
+
+  .svc__summary {
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  .svc__thumbnail {
+    width: 4.5rem;
+  }
+}

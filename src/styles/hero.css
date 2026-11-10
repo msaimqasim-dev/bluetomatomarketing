@@ -1,0 +1,378 @@
+/* ==========================================================================
+   HERO — full-screen brand gradient, editorial type left, two counter-moving
+   columns of real project imagery right. No layout dependency on the header:
+   the header floats over the gradient and turns solid on scroll.
+   ========================================================================== */
+
+.hero {
+  --focus: var(--white);
+
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: var(--white);
+  /* Layer order: a soft top vignette keeps the transparent white navigation
+     legible over every part of the gradient; the light end stays low-right. */
+  background:
+    linear-gradient(to bottom, rgb(2 37 57 / 0.68) 0, rgb(2 37 57 / 0.3) 5rem, rgb(2 37 57 / 0) 17rem),
+    radial-gradient(58% 48% at 102% -6%, rgb(255 255 255 / 0.52) 0%, rgb(255 255 255 / 0) 70%),
+    radial-gradient(70% 55% at 96% 104%, rgb(175 224 245 / 0.42) 0%, rgb(175 224 245 / 0) 70%),
+    linear-gradient(126deg, #023a5a 0%, #00689e 30%, var(--blue-500) 56%, #2f9ed3 82%, #8ecce8 100%);
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(2.75rem, 7vw, 4.5rem);
+  align-items: center;
+  min-height: 100svh;
+  padding-top: calc(var(--header-h) + clamp(2.5rem, 7vh, 5rem));
+  padding-bottom: clamp(3rem, 8vh, 5.5rem);
+}
+
+/* ---- Copy ---------------------------------------------------------------- */
+.hero__copy {
+  max-width: 36rem;
+}
+
+.hero__eyebrow {
+  margin-bottom: clamp(1.25rem, 2.6vw, 2rem);
+  letter-spacing: 0.11em;
+  font-size: 0.75rem;
+  color: rgb(255 255 255 / 0.86);
+  animation: hero-fade 700ms var(--ease-out) both;
+}
+
+.hero__eyebrow::before {
+  background: currentColor;
+}
+
+.hero__title {
+  font-size: clamp(2.9rem, 12.5vw, 7.75rem);
+  font-stretch: 86%;
+  line-height: 0.92;
+  letter-spacing: -0.042em;
+  word-spacing: 0.06em;
+  color: var(--white);
+}
+
+/* Masked lines (see base.css reveal rules): each line slides up into a mask. */
+.hero__line {
+  display: block;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+  overflow: hidden;
+}
+
+.hero__line > span {
+  display: inline-block;
+  animation: hero-line 950ms var(--ease-out) both;
+  animation-delay: calc(var(--i) * 95ms + 120ms);
+}
+
+.hero__accent {
+  color: #d3ebf8;
+}
+
+.hero__lead {
+  max-width: 34ch;
+  margin-top: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: var(--fs-lead);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: rgb(255 255 255 / 0.9);
+  animation: hero-fade 800ms var(--ease-out) 520ms both;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: clamp(1.75rem, 3.5vw, 2.75rem);
+  animation: hero-fade 800ms var(--ease-out) 640ms both;
+}
+
+.hero__actions .btn {
+  flex: 1 1 13rem;
+}
+
+/* Buttons for the gradient field */
+.btn--hero {
+  --btn-bg: var(--white);
+  --btn-fg: var(--navy-900);
+  --btn-border: var(--white);
+  --btn-bg-hover: var(--navy-900);
+  --btn-fg-hover: var(--white);
+  --btn-border-hover: var(--navy-900);
+}
+
+.btn--ghost-light {
+  --btn-bg: transparent;
+  --btn-fg: var(--white);
+  --btn-border: rgb(255 255 255 / 0.58);
+  --btn-bg-hover: var(--white);
+  --btn-fg-hover: var(--navy-900);
+  --btn-border-hover: var(--white);
+}
+
+/* ---- Gallery ------------------------------------------------------------- */
+.hero__gallery {
+  --tile-gap: clamp(0.625rem, 1vw, 1rem);
+
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--tile-gap);
+  height: clamp(20rem, 44vh, 30rem);
+  min-width: 0;
+  animation: hero-gallery-in 1200ms var(--ease-out) 320ms both;
+}
+
+.hero__col {
+  height: 100%;
+  min-width: 0;
+}
+
+/* Editorial offset: the second column starts lower than the first. */
+.hero__col--offset {
+  padding-top: clamp(1.75rem, 4vw, 3.5rem);
+}
+
+.hero-marquee {
+  height: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+
+.hero-marquee__track {
+  display: flex;
+  flex-direction: column;
+  animation: hero-scroll-up var(--dur, 78s) linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.hero-marquee--down .hero-marquee__track {
+  animation-name: hero-scroll-down;
+}
+
+/* Two identical groups; the track moves exactly 50% for a seamless loop. */
+.hero-marquee__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tile-gap);
+  padding-bottom: var(--tile-gap);
+}
+
+.hero-tile {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: var(--ratio, 4 / 5);
+  background: rgb(255 255 255 / 0.14);
+  border-radius: var(--radius);
+}
+
+.hero-tile img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.001);
+  transition: transform 900ms var(--ease-out);
+}
+
+.hero-tile__caption {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem 0.875rem 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: linear-gradient(to top, rgb(4 24 40 / 0.78), rgb(4 24 40 / 0));
+  opacity: 0;
+  transform: translate3d(0, 0.5rem, 0);
+  transition:
+    opacity 300ms ease,
+    transform 400ms var(--ease-out);
+}
+
+/* Pause + focus the hovered image on devices that actually hover. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .hero__gallery:hover .hero-marquee__track {
+    animation-play-state: paused;
+  }
+
+  .hero-tile:hover img {
+    transform: scale(1.06);
+  }
+
+  .hero-tile:hover .hero-tile__caption {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---- Scroll cue ---------------------------------------------------------- */
+.hero__scroll {
+  position: absolute;
+  bottom: 1.75rem;
+  left: max(var(--gutter), calc((100vw - var(--wrap-max)) / 2 + var(--gutter)));
+  display: none;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.82);
+  transition: color var(--t-fast) ease;
+}
+
+.hero__scroll-line {
+  width: 3.25rem;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left;
+  animation: hero-scroll-cue 2.4s var(--ease-in-out) infinite;
+}
+
+.hero__scroll:hover {
+  color: var(--white);
+}
+
+/* ---- Keyframes ----------------------------------------------------------- */
+@keyframes hero-line {
+  from {
+    transform: translate3d(0, 110%, 0);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 1.25rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-gallery-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2rem, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes hero-scroll-up {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -50%, 0);
+  }
+}
+
+@keyframes hero-scroll-down {
+  from {
+    transform: translate3d(0, -50%, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hero-scroll-cue {
+  0%,
+  100% {
+    transform: scaleX(0.35);
+    opacity: 0.5;
+  }
+  45% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  70% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* ---- Tablet -------------------------------------------------------------- */
+@media (min-width: 40rem) {
+  .hero__actions .btn {
+    flex: 0 0 auto;
+  }
+
+  .hero__gallery {
+    height: clamp(24rem, 46vh, 30rem);
+  }
+}
+
+/* ---- Desktop split ------------------------------------------------------- */
+@media (min-width: 64rem) {
+  .hero__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--gap);
+    min-height: 100svh;
+  }
+
+  .hero__copy {
+    grid-column: 1 / span 7;
+    max-width: none;
+    padding-right: clamp(1rem, 3vw, 3rem);
+  }
+
+  .hero__title {
+    font-size: clamp(4rem, 8.4vw, 8rem);
+  }
+
+  .hero__gallery {
+    grid-column: 8 / span 5;
+    height: min(74vh, 46rem);
+  }
+
+  .hero__scroll {
+    display: inline-flex;
+  }
+}
+
+/* ---- Reduced motion: static, fully visible gallery ----------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero__eyebrow,
+  .hero__lead,
+  .hero__actions,
+  .hero__gallery,
+  .hero__line > span {
+    animation: none !important;
+  }
+
+  .hero-marquee__track {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .hero-marquee--down .hero-marquee__track {
+    transform: translate3d(0, -18%, 0) !important;
+  }
+
+  .hero__scroll-line {
+    animation: none !important;
+    transform: none;
+  }
+}

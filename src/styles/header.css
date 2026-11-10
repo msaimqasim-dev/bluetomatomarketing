@@ -1,0 +1,541 @@
+/* ==========================================================================
+   HEADER — sticky bar, desktop disclosure panels, mobile menu overlay
+   ========================================================================== */
+
+.skip-link {
+  position: absolute;
+  top: 0.75rem;
+  left: var(--gutter);
+  z-index: 120;
+  padding: 0.875rem 1.125rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--white);
+  background: var(--navy-900);
+  border-radius: var(--radius);
+  transform: translateY(-250%);
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.logo {
+  display: block;
+  width: auto;
+  height: 2rem;
+  aspect-ratio: 169.846 / 30.727;
+  fill: currentColor;
+}
+
+/* ---- Bar ----------------------------------------------------------------- */
+/* Fixed overlay: no space is reserved, so the hero can run edge to edge and
+   nothing shifts when the bar changes state. */
+.site-header {
+  --header-ink: var(--navy-900);
+  --header-logo: var(--blue-500);
+  --header-bar: var(--white);
+
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 60;
+  color: var(--header-ink);
+  background: var(--header-bar);
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 400ms var(--ease-out),
+    border-color 400ms var(--ease-out),
+    box-shadow 400ms var(--ease-out),
+    color 300ms ease;
+}
+
+/* Over the hero: transparent, white type and logo. */
+.site-header[data-overlay] {
+  --header-ink: var(--white);
+  --header-logo: var(--white);
+  --header-bar: transparent;
+  --focus: var(--white);
+}
+
+/* Scrolled (or a panel is open): solid white with a hairline + soft lift. */
+.site-header:not([data-overlay]) {
+  border-bottom-color: var(--gray-200);
+  box-shadow: 0 10px 30px -22px rgb(7 26 43 / 0.45);
+}
+
+.site-header__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  height: var(--header-h);
+}
+
+.site-header__logo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: var(--header-logo);
+  transition: color 300ms ease;
+}
+
+.site-header__logo .logo {
+  height: 1.75rem;
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.site-header__cta {
+  display: none;
+}
+
+/* CTA follows the bar: white on the gradient, brand blue on white. */
+.site-header[data-overlay] .site-header__cta {
+  --btn-bg: var(--white);
+  --btn-fg: var(--navy-900);
+  --btn-border: var(--white);
+  --btn-bg-hover: var(--navy-900);
+  --btn-fg-hover: var(--white);
+  --btn-border-hover: var(--white);
+}
+
+/* ---- Desktop nav --------------------------------------------------------- */
+.site-nav {
+  display: none;
+}
+
+.site-nav__list {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 2.6vw, 2.75rem);
+}
+
+.site-nav__link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--header-ink);
+  cursor: pointer;
+  transition: color 300ms ease;
+}
+
+.site-nav__link::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0.5rem;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 320ms var(--ease-out);
+}
+
+.site-nav__link:hover::after,
+.site-nav__link[aria-expanded="true"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.site-nav__chev {
+  width: 0.625rem;
+  height: 0.625rem;
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.site-nav__link[aria-expanded="true"] .site-nav__chev {
+  transform: rotate(180deg);
+}
+
+/* ---- Disclosure panels --------------------------------------------------- */
+.nav-panel {
+  --ink: var(--white);
+  --focus: var(--white);
+
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  color: var(--white);
+  background: var(--navy-900);
+  visibility: hidden;
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+  transition:
+    clip-path var(--t-med) var(--ease-out),
+    opacity 200ms ease,
+    visibility 0s linear var(--t-med);
+}
+
+.nav-panel[data-open] {
+  visibility: visible;
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  transition-delay: 0s;
+}
+
+.nav-panel__inner {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gap);
+  padding-block: 2.75rem 3.25rem;
+}
+
+.nav-panel__label {
+  grid-column: 1 / span 3;
+  align-self: start;
+  color: var(--blue-300);
+}
+
+.nav-panel__list {
+  grid-column: 4 / -1;
+}
+
+.nav-panel__list--cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--gap);
+}
+
+.nav-card {
+  position: relative;
+  display: grid;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 1.25rem 2.5rem 0.5rem 0;
+  border-top: 1px solid rgb(255 255 255 / 0.22);
+  transition: border-color var(--t-fast) ease;
+}
+
+.nav-card__num {
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--blue-300);
+}
+
+.nav-card__name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  font-stretch: var(--wdth-display);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  transition: color var(--t-fast) ease;
+}
+
+.nav-card__desc {
+  font-size: var(--fs-small);
+  line-height: 1.45;
+  color: rgb(255 255 255 / 0.72);
+}
+
+.nav-card .icon {
+  position: absolute;
+  top: 1.25rem;
+  right: 0;
+  color: var(--blue-300);
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.nav-card:hover {
+  border-color: var(--blue-300);
+}
+
+.nav-card:hover .nav-card__name {
+  color: var(--blue-300);
+}
+
+.nav-card:hover .icon {
+  transform: translate(0.2rem, -0.2rem);
+}
+
+.nav-panel__list--columns {
+  columns: 3;
+  column-gap: var(--gap);
+}
+
+.nav-panel__list--columns li {
+  break-inside: avoid;
+}
+
+.nav-plain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3rem;
+  font-size: 1.125rem;
+  font-weight: 500;
+  border-top: 1px solid rgb(255 255 255 / 0.16);
+  transition:
+    color var(--t-fast) ease,
+    padding var(--t-fast) var(--ease-out);
+}
+
+.nav-plain .icon {
+  opacity: 0;
+  transform: translateX(-0.5rem);
+  transition:
+    opacity var(--t-fast) ease,
+    transform var(--t-fast) var(--ease-out);
+}
+
+.nav-plain:hover,
+.nav-plain:focus-visible {
+  padding-left: 0.5rem;
+  color: var(--blue-300);
+}
+
+.nav-plain:hover .icon,
+.nav-plain:focus-visible .icon {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- Menu toggle --------------------------------------------------------- */
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding-left: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--header-ink);
+  cursor: pointer;
+  transition: color 300ms ease;
+}
+
+.menu-toggle__icon {
+  position: relative;
+  width: 1.5rem;
+  height: 0.5rem;
+}
+
+.menu-toggle__icon::before,
+.menu-toggle__icon::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: currentColor;
+  transition: transform 300ms var(--ease-out);
+}
+
+.menu-toggle__icon::before {
+  top: 0;
+}
+
+.menu-toggle__icon::after {
+  bottom: 0;
+}
+
+.menu-toggle--close {
+  color: var(--white);
+}
+
+.menu-toggle--close .menu-toggle__icon::before {
+  transform: translateY(0.1875rem) rotate(45deg);
+}
+
+.menu-toggle--close .menu-toggle__icon::after {
+  transform: translateY(-0.1875rem) rotate(-45deg);
+}
+
+/* ---- Mobile menu overlay ------------------------------------------------- */
+.mobile-menu {
+  --ink: var(--white);
+  --focus: var(--white);
+  --accent: var(--blue-300);
+
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  color: var(--white);
+  background: var(--navy-900);
+  visibility: hidden;
+  opacity: 0;
+  clip-path: inset(0 0 100% 0);
+  transition:
+    clip-path 550ms var(--ease-out),
+    opacity 250ms ease,
+    visibility 0s linear 550ms;
+}
+
+.mobile-menu[data-open] {
+  visibility: visible;
+  opacity: 1;
+  clip-path: inset(0 0 0 0);
+  transition-delay: 0s;
+}
+
+.mobile-menu__bar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-h);
+}
+
+.mobile-menu__bar .logo {
+  height: 1.75rem;
+  color: var(--white);
+}
+
+.mobile-menu__nav {
+  flex: 1 0 auto;
+  padding-block: 1rem 2rem;
+}
+
+.mobile-menu__item {
+  border-bottom: 1px solid rgb(255 255 255 / 0.16);
+  opacity: 0;
+  transform: translate3d(0, 1rem, 0);
+  transition:
+    opacity 500ms var(--ease-out),
+    transform 500ms var(--ease-out);
+}
+
+.mobile-menu[data-open] .mobile-menu__item {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(var(--i) * 55ms + 180ms);
+}
+
+.mobile-menu__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: 4.25rem;
+  padding-block: 0.5rem;
+  font-size: clamp(1.75rem, 7.5vw, 2.5rem);
+  font-weight: 600;
+  font-stretch: var(--wdth-display);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  text-align: left;
+  color: var(--white);
+  cursor: pointer;
+}
+
+.mobile-menu__link .icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--blue-300);
+  transition: transform 300ms var(--ease-out);
+}
+
+.mobile-menu__link[aria-expanded="true"] .icon {
+  transform: rotate(45deg);
+}
+
+.mobile-menu__sub {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--t-med) var(--ease-out),
+    visibility 0s linear var(--t-med);
+}
+
+.mobile-menu__sub[data-open] {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.mobile-menu__sub > div {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.mobile-menu__sublist {
+  display: grid;
+  padding: 0 0 1.25rem;
+}
+
+.mobile-menu__sublist--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 1rem;
+}
+
+.mobile-menu__sublist a {
+  display: flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: 1.0625rem;
+  line-height: 1.25;
+  color: rgb(255 255 255 / 0.84);
+}
+
+.mobile-menu__sublist a:hover {
+  color: var(--blue-300);
+}
+
+.mobile-menu__foot {
+  display: grid;
+  flex: none;
+  gap: 1.25rem;
+  padding-block: 0.5rem 2rem;
+}
+
+.mobile-menu__contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  font-size: 1rem;
+}
+
+.mobile-menu__contact a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  color: rgb(255 255 255 / 0.84);
+}
+
+/* ---- Breakpoints --------------------------------------------------------- */
+@media (min-width: 40rem) {
+  .site-header__cta {
+    display: inline-flex;
+  }
+}
+
+@media (min-width: 64rem) {
+  .site-header__logo .logo {
+    height: 2.125rem;
+  }
+
+  .site-nav {
+    display: block;
+  }
+
+  .menu-toggle:not(.menu-toggle--close) {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: none;
+  }
+}
